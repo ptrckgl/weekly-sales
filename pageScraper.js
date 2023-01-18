@@ -7,10 +7,23 @@ const scraperObject = {
     );
     console.log(`Navigating to ${this.url}...`);
     await page.goto(this.url);
-    const textContent = await page.evaluate(() => {
+
+    textContent = await page.evaluate(() => {
       return [
-        ...document.querySelectorAll('.shelfProductTile-descriptionLink'),
-      ].map((a) => a.innerHTML);
+        ...document
+          .querySelector(
+            '#search-content > div > wow-product-search-container > shared-grid > div'
+          )
+          .querySelectorAll('.shelfProductTile-information'),
+      ].map((a) => {
+        return {
+          name: a.querySelector('.shelfProductTile-descriptionLink').innerHTML,
+          price:
+            a.querySelector('.price-dollars').innerHTML +
+            '.' +
+            a.querySelector('.price-cents').innerHTML,
+        };
+      });
     });
 
     console.log(textContent);
